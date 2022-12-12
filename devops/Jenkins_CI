@@ -1,0 +1,48 @@
+
+pipeline {
+  agent any
+    tools {
+        maven 'MAVEN_3.8'
+        jdk 'JDK8'
+    }
+
+    environment {
+        AZURE_SUBSCRIPTION_ID='99999999-9999-9999-9999-99999999'
+        AZURE_TENANT_ID='99999999-9999-9999-9999-99999999'
+        CONTAINER_REGISTRY='container registry name'
+        RESOURCE_GROUP='resource group'
+        REPO="repo name"
+        IMAGE_NAME="image name"
+        TAG="tag"
+    }
+
+    stages {      
+        stage('Build maven ') {
+            steps { 
+                    sh 'pwd'      
+                    sh 'mvn  clean install package'
+            }
+        }
+        
+        stage('Copy Artifact') {
+           steps { 
+            sh 'pwd'
+            sh 'cp -r target/*.jar docker'
+            }
+        }
+         
+        stage('Build docker image') {
+           steps {
+               script {         
+                 def customImage = docker.build('initsixcloud/petclinic', "./docker")
+                 docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+                 customImage.push("${env.BUILD_NUMBER}")
+                 }                     
+           }
+        }
+
+        stage {
+        }
+	  }
+    }
+}
