@@ -2,7 +2,7 @@
 ## Install Azure CLI
 ```sh
 
-## Downlaod & Install Azure CLI on Windows
+## Download & Install Azure CLI on Windows
 https://aka.ms/installazurecliwindows
 ```
 
@@ -13,9 +13,16 @@ type az --help --> to test whether Azure CLI is installed correctly or not
 ```
 ## Once Installation is completed, need to Access Azure with below commands
 ```sh
+# Login with Azure credentials 
 az login
-az account set --subscription <SubscriptionName> --> Incase if we have multiple subscriptions
+# Incase we have multiple subscriptions
+az account set --subscription <SubscriptionName> 
+
+#  Get the credentials of AKS in local to mange the Cluster 
 az aks get-credentials --resource-group=<RGNAME> --name=<AKSCLUSTERNAME>
+
+# After this step we have
+# Merged "AKSCLUSTERNAME" as current context in /root/.kube/config
 ```
 ## Install kubectl command line package in Local Windows Machine
 ```sh
