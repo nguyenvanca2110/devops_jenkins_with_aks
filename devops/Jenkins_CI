@@ -7,13 +7,7 @@ pipeline {
     }
 
     environment {
-        AZURE_SUBSCRIPTION_ID='99999999-9999-9999-9999-99999999'
-        AZURE_TENANT_ID='99999999-9999-9999-9999-99999999'
-        CONTAINER_REGISTRY='container registry name'
-        RESOURCE_GROUP='resource group'
-        REPO="repo name"
-        IMAGE_NAME="image name"
-        TAG="tag"
+        ACR_CREDENTIALS=credentials('acr_2110')
     }
 
     stages {      
@@ -33,15 +27,13 @@ pipeline {
          
         stage('Build docker image') {
            steps {
-               script {         
-                 def customImage = docker.build('initsixcloud/petclinic', "./docker")
-                 docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                 customImage.push("${env.BUILD_NUMBER}")
-                 }                     
-           }
-        }
+            sh 'pwd'
 
-        stage {
+                        
+            def customImage = docker.build('initsixcloud/petclinic', "./docker")
+            docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+            customImage.push("${env.BUILD_NUMBER}")                  
+           }
         }
 	  }
     }

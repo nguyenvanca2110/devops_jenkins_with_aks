@@ -7,6 +7,8 @@ helm repo search stable
 
 # Plane to pull the new configuration of a service 
 helm install repo stable/<chartname> <releasename>
+
+
 # helm search repo stable/mysql 
 # helm install repo stable/mysql 
 # helm pull stable/mysql
