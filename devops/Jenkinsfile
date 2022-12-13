@@ -1,0 +1,45 @@
+pipeline {
+  agent any
+    tools {
+      maven 'MAVEN_3.8'
+      jdk 'JDK17'
+    }
+
+    environment {
+      ACR_CREDENTIALS=credentials('acr_2110')
+    }
+
+    stages {      
+        stage('Build maven image') {
+            steps { 
+                    sh 'pwd'      
+                    sh 'mvn clean install package'
+            }
+        }
+        
+        stage('Copy Artifact from Target to Docker') {
+           steps { 
+                   sh 'pwd'
+                   sh 'cp -r target/*.jar docker'
+           }
+        }
+
+		    stage('Build') {
+          steps {
+            sh 'docker build -t 21101992.azurecr.io/canvaksdemo:$BUILD_TIMESTAMP .'
+          }
+        }
+
+        stage('Docker Login') {
+          steps {
+            sh 'docker login 21101992.azurecr.io -u $ACR_CREDENTIALS_USR -p ACR_CREDENTIALS_PSW'
+          }
+        }
+    }
+
+    post {
+      always {
+        sh 'docker logout'
+      }
+    }
+}

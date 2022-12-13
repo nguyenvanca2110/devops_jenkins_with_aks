@@ -14,26 +14,27 @@ pipeline {
         stage('Build maven ') {
             steps { 
                     sh 'pwd'      
-                    sh 'mvn  clean install package'
+                    sh 'mvn clean install package'
             }
         }
         
         stage('Copy Artifact') {
            steps { 
             sh 'pwd'
+            # Copy output JAR file to Docker folder 
             sh 'cp -r target/*.jar docker'
             }
         }
          
-        stage('Build docker image') {
+        stage('Build Image') {
            steps {
             sh 'pwd'
-
+            sh 'docker build -t /nodeapp:latest .'            
                         
             def customImage = docker.build('initsixcloud/petclinic', "./docker")
-            docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+            docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') 
             customImage.push("${env.BUILD_NUMBER}")                  
-           }
+           
         }
 	  }
     }
