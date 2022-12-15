@@ -1,12 +1,15 @@
+=================== Azure ========================
 # Login to Azure
 
 az login
+
+
+=================== Azure AKS ========================
 
 #  Get the credentials of AKS in local to mange the Cluster 
 az aks get-credentials --resource-group=<RGNAME> --name=<AKSCLUSTERNAME>
 
 az aks get-credentials --resource-group=canv-aks --name=canv-aks-demo
-
 
 kubectl get all --all-namespaces
 
@@ -17,6 +20,8 @@ kubectl get pods
 kubectl get pods -o wide
 
 kubectl get nodes
+
+=================== Azure ACR ========================
 
 # List repositories in a given Azure Container Registry.
 # az acr repository list --name MyRegistry
@@ -36,7 +41,7 @@ az acr import –name canv-app –source mcr.microsoft.com/azuredocs/azure-vote-
 # login to ACR Registries for push image
 docker login <REGISTRY_NAME>.azurecr.io -u <appId> -p <password>
 
-docker login canvnodejsapp.azurecr.io -u canvNodeJSApp -p 0uhs1q/TvIHqMr6Nbc1faP52IesymsG9
+docker login canvnodejsapp.azurecr.io -u $POC_ACR_CREDENTIALS_USR -p $POC_ACR_CREDENTIALS_PSW
 
 # Push image to ACR:
 docker push canvnodejsapp.azurecr.io/nodeapp_app:2022.12.12_14.58.41
@@ -47,7 +52,7 @@ docker push canvnodejsapp.azurecr.io/nodeapp_app:2022.12.12_14.58.41
  
 kubectl create secret docker-registry <secret-name> --namespace <namespace> --docker-server=<REGISTRY_NAME>.azurecr.io --docker-username=<appId> --docker-password=<password>
  
-kubectl create secret docker-registry 21101992app --namespace canv-aks-demo9138 --docker-server 21101992.azurecr.io --docker-username=canvNodeJSApp --docker-password=0uhs1q/TvIHqMr6Nbc1faP52IesymsG9
+kubectl create secret docker-registry lsepocnodejs-secret --namespace canv-aks-demo9138 --docker-server canvnodejsapp.azurecr.io --docker-username=$POC_ACR_CREDENTIALS_USR --docker-password=$POC_ACR_CREDENTIALS_PSW
 
  
 
